@@ -88,7 +88,7 @@ async function send() {
 
 
   const rtmViaIPC = quorumjs.RawTransactionManager(web3, {
-    ipcPath: "/home/vagrant/quorum-examples/7nodes/qdata/c1/tm.ipc"
+    ipcPath: "/home/ubuntu/quorum-examples/7nodes/qdata/c1/tm.ipc"
   });
 
 
