@@ -13,7 +13,7 @@ function usage() {
   echo "    $0 [--tesseraJar path to Tessera jar file] [--remoteDebug] [--jvmParams \"JVM parameters\"]"
   echo ""
   echo "Where:"
-  echo "    --tesseraJar specifies path to the jar file, default is to use the vagrant location"
+  echo "    --tesseraJar specifies path to the jar file, default is to use the ubuntu location"
   echo "    --remoteDebug enables remote debug on port 500n for each Tessera node (for use with JVisualVm etc)"
   echo "    --jvmParams specifies parameters to be used by JVM when running Tessera"
   echo "Notes:"
@@ -26,7 +26,7 @@ function usage() {
   exit -1
 }
 
-defaultTesseraJarExpr="/home/vagrant/tessera/tessera.jar"
+defaultTesseraJarExpr="/home/ubuntu/tessera/tessera.jar"
 set +e
 defaultTesseraJar=`find ${defaultTesseraJarExpr} 2>/dev/null`
 set -e
