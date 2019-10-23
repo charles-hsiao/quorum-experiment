@@ -13,43 +13,40 @@ echo "[*] Initialising Tessera configuration for $numNodes node(s)"
 
 # Dynamically create the config for peers, depending on numNodes
 peerList=
-for i in `seq 1 ${numNodes}`
-do
-    if [[ $i -ne 1 ]]; then
-        peerList="$peerList,"
-    fi
+INDEX_NODE=1
+if [[ $INDEX_NODE -ne 1 ]]; then
+    peerList="$peerList,"
+fi
 
-    portNum=$((9000 + $i))
+portNum=$((9000 + $INDEX_NODE))
 
-    peerList="${peerList}
-        {
-            \"url\": \"http://localhost:${portNum}\"
-        }"
-done
+peerList="${peerList}
+    {
+        \"url\": \"http://localhost:${portNum}\"
+    }"
 
 # Write the config for the Tessera nodes
 currentDir=$(pwd)
-for i in `seq 1 ${numNodes}`
-do
-    DDIR="${currentDir}/qdata/c${i}"
-    mkdir -p ${DDIR}
-    mkdir -p qdata/logs
-    cp "keys/tm${i}.pub" "${DDIR}/tm.pub"
-    cp "keys/tm${i}.key" "${DDIR}/tm.key"
-    rm -f "${DDIR}/tm.ipc"
 
-    serverPortP2P=$((9000 + ${i}))
-    serverPortThirdParty=$((9080 + ${i}))
-    serverPortEnclave=$((9180 + ${i}))
+DDIR="${currentDir}/qdata/c${INDEX_NODE}"
+mkdir -p ${DDIR}
+mkdir -p qdata/logs
+cp "keys/tm${INDEX_NODE}.pub" "${DDIR}/tm.pub"
+cp "keys/tm${INDEX_NODE}.key" "${DDIR}/tm.key"
+rm -f "${DDIR}/tm.ipc"
+
+serverPortP2P=$((9000 + ${INDEX_NODE}))
+serverPortThirdParty=$((9080 + ${INDEX_NODE}))
+serverPortEnclave=$((9180 + ${INDEX_NODE}))
 
     #change tls to "strict" to enable it (don't forget to also change http -> https)
-cat <<EOF > ${DDIR}/tessera-config-09-${i}.json
+cat <<EOF > ${DDIR}/tessera-config-09-${INDEX_NODE}.json
 {
     "useWhiteList": false,
     "jdbc": {
         "username": "sa",
         "password": "",
-        "url": "jdbc:h2:${DDIR}/db${i};MODE=Oracle;TRACE_LEVEL_SYSTEM_OUT=0",
+        "url": "jdbc:h2:${DDIR}/db${INDEX_NODE};MODE=Oracle;TRACE_LEVEL_SYSTEM_OUT=0",
         "autoCreateTables": true
     },
     "serverConfigs":[
@@ -72,13 +69,13 @@ cat <<EOF > ${DDIR}/tessera-config-09-${i}.json
             "sslConfig": {
                 "tls": "OFF",
                 "generateKeyStoreIfNotExisted": true,
-                "serverKeyStore": "${DDIR}/server${i}-keystore",
+                "serverKeyStore": "${DDIR}/server${INDEX_NODE}-keystore",
                 "serverKeyStorePassword": "quorum",
                 "serverTrustStore": "${DDIR}/server-truststore",
                 "serverTrustStorePassword": "quorum",
                 "serverTrustMode": "TOFU",
                 "knownClientsFile": "${DDIR}/knownClients",
-                "clientKeyStore": "${DDIR}/client${i}-keystore",
+                "clientKeyStore": "${DDIR}/client${INDEX_NODE}-keystore",
                 "clientKeyStorePassword": "quorum",
                 "clientTrustStore": "${DDIR}/client-truststore",
                 "clientTrustStorePassword": "quorum",
@@ -106,13 +103,13 @@ EOF
 
 # Enclave configurations
 
-cat <<EOF > ${DDIR}/tessera-config-enclave-09-${i}.json
+cat <<EOF > ${DDIR}/tessera-config-enclave-09-${INDEX_NODE}.json
 {
     "useWhiteList": false,
     "jdbc": {
         "username": "sa",
         "password": "",
-        "url": "jdbc:h2:${DDIR}/db${i};MODE=Oracle;TRACE_LEVEL_SYSTEM_OUT=0",
+        "url": "jdbc:h2:${DDIR}/db${INDEX_NODE};MODE=Oracle;TRACE_LEVEL_SYSTEM_OUT=0",
         "autoCreateTables": true
     },
     "serverConfigs":[
@@ -150,7 +147,7 @@ cat <<EOF > ${DDIR}/tessera-config-enclave-09-${i}.json
 }
 EOF
 
-cat <<EOF > ${DDIR}/enclave-09-${i}.json
+cat <<EOF > ${DDIR}/enclave-09-${INDEX_NODE}.json
 {
     "serverConfigs":[
         {
@@ -172,5 +169,3 @@ cat <<EOF > ${DDIR}/enclave-09-${i}.json
     "alwaysSendTo": []
 }
 EOF
-
-done
