@@ -14,9 +14,6 @@ echo "[*] Initialising Tessera configuration for $numNodes node(s)"
 # Dynamically create the config for peers, depending on numNodes
 peerList=
 INDEX_NODE=1
-if [[ $INDEX_NODE -ne 1 ]]; then
-    peerList="$peerList,"
-fi
 
 portNum=$((9000 + $INDEX_NODE))
 
