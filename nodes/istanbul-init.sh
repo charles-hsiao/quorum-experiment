@@ -62,20 +62,19 @@ if [[ $numPermissionedNodes -ne $numNodes ]]; then
     exit -1
 fi
 
-for i in `seq 1 ${numNodes}`
-do
-    echo "[*] Configuring node ${i}"
-    mkdir -p qdata/dd${i}/{keystore,geth}
-    if [[ "$istanbulTools" == "true" ]]; then
-        iMinus1=$(($i - 1))
-        cp ${iMinus1}/nodekey qdata/dd${i}/geth/nodekey
-    else
-        cp raft/nodekey${i} qdata/dd${i}/geth/nodekey
-    fi
-    cp permissioned-nodes.json qdata/dd${i}/static-nodes.json
-    cp keys/key${i} qdata/dd${i}/keystore
-    geth --datadir qdata/dd${i} init istanbul-genesis.json
-done
+INDEX_NODE=1
+
+echo "[*] Configuring node ${INDEX_NODE}"
+mkdir -p qdata/dd${INDEX_NODE}/{keystore,geth}
+if [[ "$istanbulTools" == "true" ]]; then
+    iMinus1=$(($INDEX_NODE - 1))
+    cp ${INDEX_NODEMinus1}/nodekey qdata/dd${INDEX_NODE}/geth/nodekey
+else
+    cp raft/nodekey${INDEX_NODE} qdata/dd${INDEX_NODE}/geth/nodekey
+fi
+cp permissioned-nodes.json qdata/dd${INDEX_NODE}/static-nodes.json
+cp keys/key${INDEX_NODE} qdata/dd${INDEX_NODE}/keystore
+geth --datadir qdata/dd${INDEX_NODE} init istanbul-genesis.json
 
 #Initialise Tessera configuration
 ./tessera-init.sh
