@@ -13,14 +13,21 @@ echo "[*] Initialising Tessera configuration for $numNodes node(s)"
 
 # Dynamically create the config for peers, depending on numNodes
 peerList=
+for i in `seq 1 ${numNodes}`
+do
+    if [[ $i -ne 1 ]]; then
+        peerList="$peerList,"
+    fi
+
+    portNum=$((9000 + $i))
+
+    peerList="${peerList}
+        {
+            \"url\": \"http://localhost:${portNum}\"
+        }"
+done
+
 INDEX_NODE=1
-
-portNum=$((9000 + $INDEX_NODE))
-
-peerList="${peerList}
-    {
-        \"url\": \"http://localhost:${portNum}\"
-    }"
 
 # Write the config for the Tessera nodes
 currentDir=$(pwd)
