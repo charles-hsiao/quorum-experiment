@@ -62,7 +62,7 @@ if [[ $numPermissionedNodes -ne $numNodes ]]; then
     exit -1
 fi
 
-INDEX_NODE=1
+INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
 
 echo "[*] Configuring node ${INDEX_NODE}"
 mkdir -p qdata/dd${INDEX_NODE}/{keystore,geth}
