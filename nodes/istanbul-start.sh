@@ -87,7 +87,7 @@ ARGS="--nodiscover --istanbul.blockperiod 5 --networkid $NETWORK_ID --syncmode f
 
 basePort=21000
 baseRpcPort=22000
-INDEX_NODE=1
+INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
 
 port=$(($basePort + ${INDEX_NODE} - 1))
 rpcPort=$(($baseRpcPort + ${INDEX_NODE} - 1))

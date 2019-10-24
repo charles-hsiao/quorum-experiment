@@ -27,7 +27,7 @@ do
         }"
 done
 
-INDEX_NODE=1
+INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
 
 # Write the config for the Tessera nodes
 currentDir=$(pwd)

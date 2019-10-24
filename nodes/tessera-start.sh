@@ -92,7 +92,7 @@ fi
 echo "[*] Starting $numNodes Tessera node(s)"
 
 currentDir=`pwd`
-INDEX_NODE=1
+INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
 
 DDIR="qdata/c$INDEX_NODE"
 mkdir -p ${DDIR}
