@@ -121,7 +121,7 @@ done
 CMD="java $jvmParams $DEBUG $MEMORY -jar ${tesseraJar} -configfile ${DDIR}/tessera-config${TESSERA_CONFIG_TYPE}${INDEX_NODE}.json ${PEERS_CMD}"
 
 echo "$CMD >> qdata/logs/tessera$INDEX_NODE.log 2>&1 &"
-${CMD} >> "qdata/logs/tessera$INDEX_NODE.log" 2>&1 &
+nohup ${CMD} >> "qdata/logs/tessera${INDEX_NODE}.log" 2>&1 &
 sleep 1
 
 echo "Waiting until all Tessera nodes are running..."
