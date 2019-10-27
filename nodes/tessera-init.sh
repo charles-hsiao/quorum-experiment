@@ -11,22 +11,6 @@ fi
 
 echo "[*] Initialising Tessera configuration for $numNodes node(s)"
 
-# Dynamically create the config for peers, depending on numNodes
-peerList=
-for i in `seq 1 ${numNodes}`
-do
-    if [[ $i -ne 1 ]]; then
-        peerList="$peerList,"
-    fi
-
-    portNum=$((9000 + $i))
-
-    peerList="${peerList}
-        {
-            \"url\": \"http://localhost:${portNum}\"
-        }"
-done
-
 INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
 
 # Write the config for the Tessera nodes
@@ -39,7 +23,7 @@ cp "keys/tm${INDEX_NODE}.pub" "${DDIR}/tm.pub"
 cp "keys/tm${INDEX_NODE}.key" "${DDIR}/tm.key"
 rm -f "${DDIR}/tm.ipc"
 
-serverPortP2P=$((9000 + ${INDEX_NODE}))
+serverPortP2P=9001
 serverPortThirdParty=$((9080 + ${INDEX_NODE}))
 serverPortEnclave=$((9180 + ${INDEX_NODE}))
 
@@ -90,7 +74,6 @@ cat <<EOF > ${DDIR}/tessera-config-09-${INDEX_NODE}.json
         }
     ],
     "peer": [
-        ${peerList}
     ],
     "keys": {
         "passwords": [],
@@ -146,7 +129,6 @@ cat <<EOF > ${DDIR}/tessera-config-enclave-09-${INDEX_NODE}.json
         }
     ],
     "peer": [
-        ${peerList}
     ]
 }
 EOF

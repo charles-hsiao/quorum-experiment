@@ -115,7 +115,7 @@ PEERS_CMD=""
 IN=$(cat ~/node_config | grep "PEER_IPS" | awk -F '=' '{print $2}')
 IFS=',' read -ra PEER <<< "$IN"
 for i in "${PEER[@]}"; do
-    PEERS_CMD+=" --peer.url http://$i"
+    PEERS_CMD+=" --peer.url http://$i:9001"
 done
 
 CMD="java $jvmParams $DEBUG $MEMORY -jar ${tesseraJar} -configfile ${DDIR}/tessera-config${TESSERA_CONFIG_TYPE}${INDEX_NODE}.json ${PEERS_CMD}"
