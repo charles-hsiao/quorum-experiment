@@ -91,15 +91,6 @@ fi
 
 echo "[*] Starting $numNodes Tessera node(s)"
 
-#PEERS_CMD=""
-
-#IFS=','
-#peers=$(cat ~/node_config | grep "PEER_IPS" | awk -F '=' '{print $2}')
-#for x in $peers
-#do
-#  PEERS_CMD+="--peer.url http://$x"
-#done
-
 currentDir=`pwd`
 INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
 
