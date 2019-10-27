@@ -138,7 +138,7 @@ while ${DOWN}; do
     set +e
     #NOTE: if using https, change the scheme
     #NOTE: if using the IP whitelist, change the host to an allowed host
-    result=$(curl -s http://localhost:900${INDEX_NODE}/upcheck)
+    result=$(curl -s http://localhost:9001/upcheck)
     set -e
     if [ ! "${result}" == "I'm up!" ]; then
         echo "Node ${INDEX_NODE} is not yet listening on http"
