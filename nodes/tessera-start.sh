@@ -91,6 +91,15 @@ fi
 
 echo "[*] Starting $numNodes Tessera node(s)"
 
+#PEERS_CMD=""
+
+#IFS=','
+#peers=$(cat ~/node_config | grep "PEER_IPS" | awk -F '=' '{print $2}')
+#for x in $peers
+#do
+#  PEERS_CMD+="--peer.url http://$x"
+#done
+
 currentDir=`pwd`
 INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
 
@@ -121,7 +130,7 @@ done
 CMD="java $jvmParams $DEBUG $MEMORY -jar ${tesseraJar} -configfile ${DDIR}/tessera-config${TESSERA_CONFIG_TYPE}${INDEX_NODE}.json ${PEERS_CMD}"
 
 echo "$CMD >> qdata/logs/tessera$INDEX_NODE.log 2>&1 &"
-${CMD} >> "qdata/logs/tessera$INDEX_NODE.log" 2>&1 &
+nohup ${CMD} >> "qdata/logs/tessera${INDEX_NODE}.log" 2>&1 &
 sleep 1
 
 echo "Waiting until all Tessera nodes are running..."
