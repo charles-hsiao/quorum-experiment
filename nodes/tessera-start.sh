@@ -110,7 +110,16 @@ if [[ ! "$jvmParams" =~ "Xm" ]]; then
   MEMORY="-Xms128M -Xmx128M"
 fi
 
-CMD="java $jvmParams $DEBUG $MEMORY -jar ${tesseraJar} -configfile $DDIR/tessera-config$TESSERA_CONFIG_TYPE$INDEX_NODE.json"
+PEERS_CMD=""
+
+IN=$(cat ~/node_config | grep "PEER_IPS" | awk -F '=' '{print $2}')
+IFS=',' read -ra PEER <<< "$IN"
+for i in "${PEER[@]}"; do
+    PEERS_CMD+=" --peer.url http://$i"
+done
+
+CMD="java $jvmParams $DEBUG $MEMORY -jar ${tesseraJar} -configfile ${DDIR}/tessera-config${TESSERA_CONFIG_TYPE}${INDEX_NODE}.json ${PEERS_CMD}"
+
 echo "$CMD >> qdata/logs/tessera$INDEX_NODE.log 2>&1 &"
 ${CMD} >> "qdata/logs/tessera$INDEX_NODE.log" 2>&1 &
 sleep 1
