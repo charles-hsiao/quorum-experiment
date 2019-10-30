@@ -3,8 +3,8 @@ const Web3 = require("web3");
 const EthereumTx = require("ethereumjs-tx");
 // tessera 1 public key
 const TM1_PUBLIC_KEY = "BULeR8JyUWhiuuCMU/HLA0Q5pzkYT+cHII3ZKBey3Bo=";
-// tessera 7 public key
-const TM7_PUBLIC_KEY = "ROAZBWtSacxXQrOe3FGAqJDyJjFePR5ce4TSIzmJ0Bc=";
+// tessera 3 public key
+const TM3_PUBLIC_KEY = "1iTZde/ndBHvzhcl7V68x44Vx7pl8nwx9LqnM/AfJUg=";
 
 // the account to use for signing (public address)
 const accAddress = "ed9d02e382b34818e88b88a309c7fe71e65f419d";
@@ -143,7 +143,7 @@ async function send() {
 
     rawTransactionManager
         .sendRawRequest(privateSignedTxHex, [
-            TM7_PUBLIC_KEY
+            TM3_PUBLIC_KEY
         ])
         .then(console.log)
         .catch(console.log);

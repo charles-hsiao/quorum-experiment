@@ -20,7 +20,7 @@ import java.util.Arrays;
 public class SendRawPrivateTransaction {
     private static final String TESSERA1_PUBLIC_KEY = "BULeR8JyUWhiuuCMU/HLA0Q5pzkYT+cHII3ZKBey3Bo=";
 
-    private static final String TESSERA7_PUBLIC_KEY = "ROAZBWtSacxXQrOe3FGAqJDyJjFePR5ce4TSIzmJ0Bc=";
+    private static final String TESSERA3_PUBLIC_KEY = "1iTZde/ndBHvzhcl7V68x44Vx7pl8nwx9LqnM/AfJUg=";
 
     public static void main(String[] args) throws Exception {
         // initialize web3j with the quorum RPC address
@@ -42,7 +42,7 @@ public class SendRawPrivateTransaction {
         QuorumTransactionManager qrtxm = new QuorumTransactionManager(quorum,
                 credentials,
                 TESSERA1_PUBLIC_KEY,
-                Arrays.asList(TESSERA7_PUBLIC_KEY),
+                Arrays.asList(TESSERA3_PUBLIC_KEY),
                 enclave,
                 30,
                 1000);
