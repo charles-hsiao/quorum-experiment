@@ -8,5 +8,5 @@ var abi = [{"constant":true,"inputs":[],"name":"storedData","outputs":[{"name":"
 var contract = eth.contract(abi).at(address)
 
 for ( i = 0; i < 20; i++) {
-  contract.set(4,{from:eth.accounts[0], privateFor:["ROAZBWtSacxXQrOe3FGAqJDyJjFePR5ce4TSIzmJ0Bc="]});
+  contract.set(4,{from:eth.accounts[0], privateFor:["1iTZde/ndBHvzhcl7V68x44Vx7pl8nwx9LqnM/AfJUg="]});
 } 

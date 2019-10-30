@@ -10,7 +10,7 @@ var bin = "0x" + contract_json.contracts['src/SimpleEvent.sol:SimpleStoreEvent']
 
 personal.unlockAccount(eth.accounts[0])
 
-var deployTransationObject = { from: eth.accounts[0], data: bin, gas: 1000000, privateFor: ["ROAZBWtSacxXQrOe3FGAqJDyJjFePR5ce4TSIzmJ0Bc="] };
+var deployTransationObject = { from: eth.accounts[0], data: bin, gas: 1000000, privateFor: ["1iTZde/ndBHvzhcl7V68x44Vx7pl8nwx9LqnM/AfJUg="] };
 var instance = contract.new(16, deployTransationObject,  function(e, contract) {
         if (e) {
                 console.log("err creating contract", e);

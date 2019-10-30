@@ -33,7 +33,7 @@ import java.util.Collections;
 public class SendRawPrivateTransactionExternalSigning {
     private static final String TESSERA1_PUBLIC_KEY = "BULeR8JyUWhiuuCMU/HLA0Q5pzkYT+cHII3ZKBey3Bo=";
 
-    private static final String TESSERA7_PUBLIC_KEY = "ROAZBWtSacxXQrOe3FGAqJDyJjFePR5ce4TSIzmJ0Bc=";
+    private static final String TESSERA3_PUBLIC_KEY = "1iTZde/ndBHvzhcl7V68x44Vx7pl8nwx9LqnM/AfJUg=";
 
     public static void main(String[] args) throws Exception {
         // initialize web3j with the quorum RPC address
@@ -70,7 +70,7 @@ public class SendRawPrivateTransactionExternalSigning {
         String signedTxHex = Numeric.toHexString(signedTxBytes);
 
         // send the signed transaction to quorum
-        EthSendTransaction ethSendTransaction = enclave.sendRawRequest(signedTxHex, Arrays.asList(TESSERA7_PUBLIC_KEY));
+        EthSendTransaction ethSendTransaction = enclave.sendRawRequest(signedTxHex, Arrays.asList(TESSERA3_PUBLIC_KEY));
         String txHash = ethSendTransaction.getTransactionHash();
         System.out.println("Transaction hash: " + txHash);
 
