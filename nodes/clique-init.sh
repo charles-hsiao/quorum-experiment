@@ -49,16 +49,15 @@ if [[ $numPermissionedNodes -ne $numNodes ]]; then
     exit -1
 fi
 
-for i in `seq 1 ${numNodes}`
-do
-    echo "[*] Configuring node ${i}"
-    mkdir -p qdata/dd${i}/{keystore,geth}
-    cp permissioned-nodes.json qdata/dd${i}/static-nodes.json
-    cp permissioned-nodes.json qdata/dd${i}/
-    cp keys/key${i} qdata/dd${i}/keystore
-    cp raft/nodekey${i} qdata/dd${i}/geth/nodekey
-    geth --datadir qdata/dd${i} init clique-genesis.json
-done
+INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
+
+echo "[*] Configuring node ${INDEX_NODE}"
+mkdir -p qdata/dd${INDEX_NODE}/{keystore,geth}
+cp permissioned-nodes.json qdata/dd${INDEX_NODE}/static-nodes.json
+cp permissioned-nodes.json qdata/dd${INDEX_NODE}/
+cp keys/key${INDEX_NODE} qdata/dd${INDEX_NODE}/keystore
+cp raft/nodekey${INDEX_NODE} qdata/dd${INDEX_NODE}/geth/nodekey
+geth --datadir qdata/dd${INDEX_NODE} init clique-genesis.json
 
 #Initialise Tessera configuration
 ./tessera-init.sh
