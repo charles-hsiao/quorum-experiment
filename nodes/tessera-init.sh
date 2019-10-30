@@ -12,6 +12,7 @@ fi
 echo "[*] Initialising Tessera configuration for $numNodes node(s)"
 
 INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
+NODE_IP=$(cat ~/node_config | grep "NODE_IP" | awk -F '=' '{print $2}')
 
 # Write the config for the Tessera nodes
 currentDir=$(pwd)
@@ -53,7 +54,7 @@ cat <<EOF > ${DDIR}/tessera-config-09-${INDEX_NODE}.json
         {
             "app":"P2P",
             "enabled": true,
-            "serverAddress":"http://localhost:${serverPortP2P}",
+            "serverAddress":"http://${NODE_IP}:${serverPortP2P}",
             "sslConfig": {
                 "tls": "OFF",
                 "generateKeyStoreIfNotExisted": true,
@@ -121,7 +122,7 @@ cat <<EOF > ${DDIR}/tessera-config-enclave-09-${INDEX_NODE}.json
         {
             "app":"P2P",
             "enabled": true,
-            "serverAddress":"http://localhost:${serverPortP2P}",
+            "serverAddress":"http://${NODE_IP}:${serverPortP2P}",
             "sslConfig": {
                 "tls": "OFF"
             },
