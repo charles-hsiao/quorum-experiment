@@ -116,49 +116,48 @@ echo "Config type $TESSERA_CONFIG_TYPE"
 # Start up local enclave transaction managers
 # Wait for all transaction managers to finish startup
 
-#Start up all remote enclaves (from node 1 to numberOfRemoteEnclaves)
-for ((i=1;i<=numberOfRemoteEnclaves;i++));
-do
-    DDIR="qdata/c$i"
-    mkdir -p ${DDIR}
-    mkdir -p qdata/logs
-    rm -f "$DDIR/tm.ipc"
+INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
 
-    DEBUG=""
-    if [ "$remoteDebug" == "true" ]; then
-      DEBUG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=501$i -Xdebug"
-    fi
+if [[ $INDEX_NODE -le numberOfRemoteEnclaves ]]; then
+  DDIR="qdata/c$INDEX_NODE"
+  mkdir -p ${DDIR}
+  mkdir -p qdata/logs
+  rm -f "$DDIR/tm.ipc"
 
-    #Only set heap size if not specified on command line
-    MEMORY=
-    if [[ ! "$jvmParams" =~ "Xm" ]]; then
-      MEMORY="-Xms128M -Xmx128M"
-    fi
+  DEBUG=""
+  if [ "$remoteDebug" == "true" ]; then
+    DEBUG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=501$INDEX_NODE -Xdebug"
+  fi
 
-    CMD="java $jvmParams $DEBUG $MEMORY -jar ${enclaveJar} -configfile $DDIR/enclave$TESSERA_CONFIG_TYPE$i.json"
-    echo "$CMD >> qdata/logs/enclave$i.log 2>&1 &"
-    ${CMD} >> "qdata/logs/enclave$i.log" 2>&1 &
-    sleep 1
-done
+  #Only set heap size if not specified on command line
+  MEMORY=
+  if [[ ! "$jvmParams" =~ "Xm" ]]; then
+    MEMORY="-Xms128M -Xmx128M"
+  fi
 
-#Wait until all Enclaves are running
+  CMD="java $jvmParams $DEBUG $MEMORY -jar ${enclaveJar} -configfile $DDIR/enclave$TESSERA_CONFIG_TYPE$INDEX_NODE.json"
+  echo "$CMD >> qdata/logs/enclave$INDEX_NODE.log 2>&1 &"
+  nohup ${CMD} >> "qdata/logs/enclave$INDEX_NODE.log" 2>&1 &
+  sleep 1
+fi
+
+#Wait until Enclaves are running
 echo "Waiting until all Tessera enclaves are running..."
 DOWN=true
 k=10
 while ${DOWN}; do
     sleep 1
     DOWN=false
-    for ((i=1;i<=numberOfRemoteEnclaves;i++));
-    do
+    if [[ $INDEX_NODE -le numberOfRemoteEnclaves ]]; then
         set +e
 
-        result=$(curl -s http://localhost:918${i}/ping)
+        result=$(curl -s http://localhost:918${INDEX_NODE}/ping)
         set -e
         if [ ! "${result}" == "STARTED" ]; then
-            echo "Enclave ${i} is not yet listening on http"
+            echo "Enclave ${INDEX_NODE} is not yet listening on http"
             DOWN=true
         fi
-    done
+    fi
 
     k=$((k - 1))
     if [ ${k} -le 0 ]; then
@@ -169,18 +168,17 @@ while ${DOWN}; do
     sleep 5
 done
 
-#Startup all remote enclave Transaction Managers (from nodes 1 to numberOfRemoteEnclaves)
+#Startup remote enclave Transaction Managers while INDEX_NODE <= numberOfRemoteEnclaves
 currentDir=`pwd`
-for ((i=1;i<=numberOfRemoteEnclaves;i++));
-do
-    DDIR="qdata/c$i"
+if [[ $INDEX_NODE -le numberOfRemoteEnclaves ]]; then
+    DDIR="qdata/c$INDEX_NODE"
     mkdir -p ${DDIR}
     mkdir -p qdata/logs
     rm -f "$DDIR/tm.ipc"
 
     DEBUG=""
     if [ "$remoteDebug" == "true" ]; then
-      DEBUG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=500$i -Xdebug"
+      DEBUG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=500$INDEX_NODE -Xdebug"
     fi
 
     #Only set heap size if not specified on command line
@@ -189,23 +187,22 @@ do
       MEMORY="-Xms128M -Xmx128M"
     fi
 
-    CMD="java $jvmParams $DEBUG $MEMORY -jar ${tesseraJar} -configfile $DDIR/tessera-config-enclave$TESSERA_CONFIG_TYPE$i.json"
-    echo "$CMD >> qdata/logs/tessera$i.log 2>&1 &"
-    ${CMD} >> "qdata/logs/tessera$i.log" 2>&1 &
+    CMD="java $jvmParams $DEBUG $MEMORY -jar ${tesseraJar} -configfile $DDIR/tessera-config-enclave$TESSERA_CONFIG_TYPE$INDEX_NODE.json"
+    echo "$CMD >> qdata/logs/tessera$INDEX_NODE.log 2>&1 &"
+    nohup ${CMD} >> "qdata/logs/tessera$INDEX_NODE.log" 2>&1 &
     sleep 1
-done
+fi
 
-#Startup all local enclave Transaction Managers (from nodes numberOfRemoteEnclaves+1 to 7)
-for ((i=numberOfRemoteEnclaves+1;i<=7;i++));
-do
-    DDIR="qdata/c$i"
+#Startup local enclave Transaction Managers while INDEX_NODE > numberOfRemoteEnclaves
+if [[ $INDEX_NODE -gt numberOfRemoteEnclaves ]]; then
+    DDIR="qdata/c$INDEX_NODE"
     mkdir -p ${DDIR}
     mkdir -p qdata/logs
     rm -f "$DDIR/tm.ipc"
 
     DEBUG=""
     if [ "$remoteDebug" == "true" ]; then
-      DEBUG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=500$i -Xdebug"
+      DEBUG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=500$INDEX_NODE -Xdebug"
     fi
 
     #Only set heap size if not specified on command line
@@ -214,36 +211,34 @@ do
       MEMORY="-Xms128M -Xmx128M"
     fi
 
-    CMD="java $jvmParams $DEBUG $MEMORY -jar ${tesseraJar} -configfile $DDIR/tessera-config$TESSERA_CONFIG_TYPE$i.json"
-    echo "$CMD >> qdata/logs/tessera$i.log 2>&1 &"
-    ${CMD} >> "qdata/logs/tessera$i.log" 2>&1 &
+    CMD="java $jvmParams $DEBUG $MEMORY -jar ${tesseraJar} -configfile $DDIR/tessera-config$TESSERA_CONFIG_TYPE$INDEX_NODE.json"
+    echo "$CMD >> qdata/logs/tessera$INDEX_NODE.log 2>&1 &"
+    nohup ${CMD} >> "qdata/logs/tessera$INDEX_NODE.log" 2>&1 &
     sleep 1
-done
+fi
 
-#Wait until all 7 transaction managers are running
-echo "Waiting until all Tessera nodes are running..."
+#Wait until transaction managers are running
+echo "Waiting until Tessera nodes are running..."
 DOWN=true
 k=10
 while ${DOWN}; do
     sleep 1
     DOWN=false
-    for ((i=1;i<=7;i++));
-    do
-        if [ ! -S "qdata/c${i}/tm.ipc" ]; then
-            echo "Node ${i} is not yet listening on tm.ipc"
-            DOWN=true
-        fi
 
-        set +e
-        #NOTE: if using https, change the scheme
-        #NOTE: if using the IP whitelist, change the host to an allowed host
-        result=$(curl -s http://localhost:900${i}/upcheck)
-        set -e
-        if [ ! "${result}" == "I'm up!" ]; then
-            echo "Node ${i} is not yet listening on http"
-            DOWN=true
-        fi
-    done
+    if [ ! -S "qdata/c${INDEX_NODE}/tm.ipc" ]; then
+        echo "Node ${INDEX_NODE} is not yet listening on tm.ipc"
+        DOWN=true
+    fi
+
+    set +e
+    #NOTE: if using https, change the scheme
+    #NOTE: if using the IP whitelist, change the host to an allowed host
+    result=$(curl -s http://localhost:900${INDEX_NODE}/upcheck)
+    set -e
+    if [ ! "${result}" == "I'm up!" ]; then
+        echo "Node ${INDEX_NODE} is not yet listening on http"
+        DOWN=true
+    fi
 
     k=$((k - 1))
     if [ ${k} -le 0 ]; then
