@@ -10,6 +10,15 @@ fi
 echo "[*] Starting $numNodes Constellation node(s)"
 
 INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
+NODE_IP=$(cat ~/node_config | grep "NODE_IP" | awk -F '=' '{print $2}')
+
+PEERS=""
+
+IN=$(cat ~/node_config | grep "PEER_IPS" | awk -F '=' '{print $2}')
+IFS=',' read -ra PEER <<< "$IN"
+for i in "${PEER[@]}"; do
+    PEERS+="http://$i:9001,"
+done
 
 DDIR="qdata/c$INDEX_NODE"
 mkdir -p $DDIR
@@ -17,7 +26,7 @@ mkdir -p qdata/logs
 cp "keys/tm$INDEX_NODE.pub" "$DDIR/tm.pub"
 cp "keys/tm$INDEX_NODE.key" "$DDIR/tm.key"
 rm -f "$DDIR/tm.ipc"
-CMD="constellation-node --url=https://127.0.0.$INDEX_NODE:900$INDEX_NODE/ --port=900$INDEX_NODE --workdir=$DDIR --socket=tm.ipc --publickeys=tm.pub --privatekeys=tm.key --othernodes=https://127.0.0.1:9001/"
+CMD="constellation-node --url=https://$NODE_IP:9001/ --port=9001 --workdir=$DDIR --socket=tm.ipc --publickeys=tm.pub --privatekeys=tm.key --othernodes=$PEERS"
 echo "$CMD >> qdata/logs/constellation$INDEX_NODE.log 2>&1 &"
 nohup $CMD >> "qdata/logs/constellation$INDEX_NODE.log" 2>&1 &
 
