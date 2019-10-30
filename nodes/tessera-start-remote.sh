@@ -44,6 +44,14 @@ fi
 
 numberOfRemoteEnclaves=${defaultNumberOfRemoteEnclaves}
 
+PEERS_CMD=""
+
+IN=$(cat ~/node_config | grep "PEER_IPS" | awk -F '=' '{print $2}')
+IFS=',' read -ra PEER <<< "$IN"
+for i in "${PEER[@]}"; do
+    PEERS_CMD+=" --peer.url http://$i:9001"
+done
+
 remoteDebug=false
 jvmParams=
 while (( "$#" )); do
@@ -137,7 +145,7 @@ if [[ $INDEX_NODE -le numberOfRemoteEnclaves ]]; then
 
   CMD="java $jvmParams $DEBUG $MEMORY -jar ${enclaveJar} -configfile $DDIR/enclave$TESSERA_CONFIG_TYPE$INDEX_NODE.json"
   echo "$CMD >> qdata/logs/enclave$INDEX_NODE.log 2>&1 &"
-  nohup ${CMD} >> "qdata/logs/enclave$INDEX_NODE.log" 2>&1 &
+  ${CMD} >> "qdata/logs/enclave$INDEX_NODE.log" 2>&1 &
   sleep 1
 fi
 
@@ -187,9 +195,9 @@ if [[ $INDEX_NODE -le numberOfRemoteEnclaves ]]; then
       MEMORY="-Xms128M -Xmx128M"
     fi
 
-    CMD="java $jvmParams $DEBUG $MEMORY -jar ${tesseraJar} -configfile $DDIR/tessera-config-enclave$TESSERA_CONFIG_TYPE$INDEX_NODE.json"
+    CMD="java $jvmParams $DEBUG $MEMORY -jar ${tesseraJar} -configfile $DDIR/tessera-config-enclave$TESSERA_CONFIG_TYPE$INDEX_NODE.json ${PEERS_CMD}"
     echo "$CMD >> qdata/logs/tessera$INDEX_NODE.log 2>&1 &"
-    nohup ${CMD} >> "qdata/logs/tessera$INDEX_NODE.log" 2>&1 &
+    ${CMD} >> "qdata/logs/tessera$INDEX_NODE.log" 2>&1 &
     sleep 1
 fi
 
@@ -211,9 +219,9 @@ if [[ $INDEX_NODE -gt numberOfRemoteEnclaves ]]; then
       MEMORY="-Xms128M -Xmx128M"
     fi
 
-    CMD="java $jvmParams $DEBUG $MEMORY -jar ${tesseraJar} -configfile $DDIR/tessera-config$TESSERA_CONFIG_TYPE$INDEX_NODE.json"
+    CMD="java $jvmParams $DEBUG $MEMORY -jar ${tesseraJar} -configfile $DDIR/tessera-config$TESSERA_CONFIG_TYPE$INDEX_NODE.json ${PEERS_CMD}"
     echo "$CMD >> qdata/logs/tessera$INDEX_NODE.log 2>&1 &"
-    nohup ${CMD} >> "qdata/logs/tessera$INDEX_NODE.log" 2>&1 &
+    ${CMD} >> "qdata/logs/tessera$INDEX_NODE.log" 2>&1 &
     sleep 1
 fi
 
@@ -233,7 +241,7 @@ while ${DOWN}; do
     set +e
     #NOTE: if using https, change the scheme
     #NOTE: if using the IP whitelist, change the host to an allowed host
-    result=$(curl -s http://localhost:900${INDEX_NODE}/upcheck)
+    result=$(curl -s http://localhost:9001/upcheck)
     set -e
     if [ ! "${result}" == "I'm up!" ]; then
         echo "Node ${INDEX_NODE} is not yet listening on http"
