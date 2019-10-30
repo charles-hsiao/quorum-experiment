@@ -17,7 +17,7 @@ PEERS=""
 IN=$(cat ~/node_config | grep "PEER_IPS" | awk -F '=' '{print $2}')
 IFS=',' read -ra PEER <<< "$IN"
 for i in "${PEER[@]}"; do
-    PEERS+="http://$i:9001,"
+    PEERS+="http://$i:9001/,"
 done
 
 DDIR="qdata/c$INDEX_NODE"
