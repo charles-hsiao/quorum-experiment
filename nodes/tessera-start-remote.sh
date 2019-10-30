@@ -145,7 +145,7 @@ if [[ $INDEX_NODE -le numberOfRemoteEnclaves ]]; then
 
   CMD="java $jvmParams $DEBUG $MEMORY -jar ${enclaveJar} -configfile $DDIR/enclave$TESSERA_CONFIG_TYPE$INDEX_NODE.json"
   echo "$CMD >> qdata/logs/enclave$INDEX_NODE.log 2>&1 &"
-  ${CMD} >> "qdata/logs/enclave$INDEX_NODE.log" 2>&1 &
+  nohup ${CMD} >> "qdata/logs/enclave$INDEX_NODE.log" 2>&1 &
   sleep 1
 fi
 
@@ -197,7 +197,7 @@ if [[ $INDEX_NODE -le numberOfRemoteEnclaves ]]; then
 
     CMD="java $jvmParams $DEBUG $MEMORY -jar ${tesseraJar} -configfile $DDIR/tessera-config-enclave$TESSERA_CONFIG_TYPE$INDEX_NODE.json ${PEERS_CMD}"
     echo "$CMD >> qdata/logs/tessera$INDEX_NODE.log 2>&1 &"
-    ${CMD} >> "qdata/logs/tessera$INDEX_NODE.log" 2>&1 &
+    nohup ${CMD} >> "qdata/logs/tessera$INDEX_NODE.log" 2>&1 &
     sleep 1
 fi
 
@@ -221,7 +221,7 @@ if [[ $INDEX_NODE -gt numberOfRemoteEnclaves ]]; then
 
     CMD="java $jvmParams $DEBUG $MEMORY -jar ${tesseraJar} -configfile $DDIR/tessera-config$TESSERA_CONFIG_TYPE$INDEX_NODE.json ${PEERS_CMD}"
     echo "$CMD >> qdata/logs/tessera$INDEX_NODE.log 2>&1 &"
-    ${CMD} >> "qdata/logs/tessera$INDEX_NODE.log" 2>&1 &
+    nohup ${CMD} >> "qdata/logs/tessera$INDEX_NODE.log" 2>&1 &
     sleep 1
 fi
 
