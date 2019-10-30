@@ -42,7 +42,7 @@ cat <<EOF > ${DDIR}/tessera-config-09-${INDEX_NODE}.json
         {
             "app":"ThirdParty",
             "enabled": true,
-            "serverAddress": "http://localhost:${serverPortThirdParty}",
+            "serverAddress": "http://${NODE_IP}:${serverPortThirdParty}",
             "communicationType" : "REST"
         },
         {
@@ -104,13 +104,13 @@ cat <<EOF > ${DDIR}/tessera-config-enclave-09-${INDEX_NODE}.json
         {
             "app":"ENCLAVE",
             "enabled": true,
-            "serverAddress": "http://localhost:${serverPortEnclave}",
+            "serverAddress": "http://${NODE_IP}:${serverPortEnclave}",
             "communicationType" : "REST"
         },
         {
             "app":"ThirdParty",
             "enabled": true,
-            "serverAddress": "http://localhost:${serverPortThirdParty}",
+            "serverAddress": "http://${NODE_IP}:${serverPortThirdParty}",
             "communicationType" : "REST"
         },
         {
@@ -140,7 +140,7 @@ cat <<EOF > ${DDIR}/enclave-09-${INDEX_NODE}.json
         {
             "app":"ENCLAVE",
             "enabled": true,
-            "serverAddress": "http://localhost:${serverPortEnclave}",
+            "serverAddress": "http://${NODE_IP}:${serverPortEnclave}",
             "communicationType" : "REST"
         }
     ],
