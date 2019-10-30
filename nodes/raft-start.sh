@@ -88,17 +88,17 @@ ARGS="--nodiscover --verbosity 5 --networkid $NETWORK_ID --raft --rpc --rpccorsd
 basePort=21000
 baseRpcPort=22000
 baseRaftPort=50401
-for i in `seq 1 ${numNodes}`
-do
-    port=$(($basePort + ${i} - 1))
-    rpcPort=$(($baseRpcPort + ${i} - 1))
-    raftPort=$(($baseRaftPort + ${i} - 1))
-    permissioned=
-    if [[ $i -le 4 ]]; then
-        permissioned="--permissioned"
-    fi
-    PRIVATE_CONFIG=qdata/c${i}/tm.ipc nohup geth --datadir qdata/dd${i} ${ARGS} ${permissioned} --raftport ${raftPort} --rpcport ${rpcPort} --port ${port} 2>>qdata/logs/${i}.log &
-done
+
+INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
+
+port=$(($basePort + ${INDEX_NODE} - 1))
+rpcPort=$(($baseRpcPort + ${INDEX_NODE} - 1))
+raftPort=$(($baseRaftPort + ${INDEX_NODE} - 1))
+permissioned=
+if [[ $INDEX_NODE -le 4 ]]; then
+    permissioned="--permissioned"
+fi
+PRIVATE_CONFIG=qdata/c${INDEX_NODE}/tm.ipc nohup geth --datadir qdata/dd${INDEX_NODE} ${ARGS} ${permissioned} --raftport ${raftPort} --rpcport ${rpcPort} --port ${port} 2>>qdata/logs/${INDEX_NODE}.log &
 
 set +v
 
