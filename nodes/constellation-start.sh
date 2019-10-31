@@ -20,13 +20,15 @@ for i in "${PEER[@]}"; do
     PEERS+="http://$i:9001/,"
 done
 
+PEERS_LIST=$(echo $PEERS | rev | cut -c 2- | rev)
+
 DDIR="qdata/c$INDEX_NODE"
 mkdir -p $DDIR
 mkdir -p qdata/logs
 cp "keys/tm$INDEX_NODE.pub" "$DDIR/tm.pub"
 cp "keys/tm$INDEX_NODE.key" "$DDIR/tm.key"
 rm -f "$DDIR/tm.ipc"
-CMD="constellation-node --url=https://$NODE_IP:9001/ --port=9001 --workdir=$DDIR --socket=tm.ipc --publickeys=tm.pub --privatekeys=tm.key --othernodes=$PEERS"
+CMD="constellation-node --url=https://$NODE_IP:9001/ --port=9001 --workdir=$DDIR --socket=tm.ipc --publickeys=tm.pub --privatekeys=tm.key --othernodes=$PEERS_LIST"
 echo "$CMD >> qdata/logs/constellation$INDEX_NODE.log 2>&1 &"
 nohup $CMD >> "qdata/logs/constellation$INDEX_NODE.log" 2>&1 &
 
