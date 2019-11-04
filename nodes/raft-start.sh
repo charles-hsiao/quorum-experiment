@@ -86,13 +86,12 @@ set -v
 ARGS="--nodiscover --verbosity 5 --networkid $NETWORK_ID --raft --rpc --rpccorsdomain=* --rpcvhosts=* --rpcaddr 0.0.0.0 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,raft --emitcheckpoints --unlock 0 --password passwords.txt $QUORUM_GETH_ARGS"
 
 basePort=21000
-baseRpcPort=22000
+rpcPort=22000
 baseRaftPort=50401
 
 INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
 
 port=$(($basePort + ${INDEX_NODE} - 1))
-rpcPort=$(($baseRpcPort + ${INDEX_NODE} - 1))
 raftPort=$(($baseRaftPort + ${INDEX_NODE} - 1))
 permissioned=
 if [[ $INDEX_NODE -le 4 ]]; then
