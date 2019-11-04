@@ -86,11 +86,10 @@ set -v
 ARGS="--nodiscover --istanbul.blockperiod 5 --networkid $NETWORK_ID --syncmode full --mine --minerthreads 1 --rpc --rpccorsdomain=* --rpcvhosts=* --rpcaddr 0.0.0.0 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,istanbul --unlock 0 --password passwords.txt $QUORUM_GETH_ARGS"
 
 basePort=21000
-baseRpcPort=22000
+rpcPort=22000
 INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
 
 port=$(($basePort + ${INDEX_NODE} - 1))
-rpcPort=$(($baseRpcPort + ${INDEX_NODE} - 1))
 PRIVATE_CONFIG=qdata/c${INDEX_NODE}/tm.ipc nohup geth --datadir qdata/dd${INDEX_NODE} ${ARGS} --rpcport ${rpcPort} --port ${port} 2>>qdata/logs/${INDEX_NODE}.log &
 
 set +v

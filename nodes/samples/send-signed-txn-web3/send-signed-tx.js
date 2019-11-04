@@ -13,7 +13,7 @@ if (!argv.node) {
 // connect to block chain
 console.log('using node', argv.node);
 const providerURL = "http://127.0.0.1";
-const providerPort = "2200".concat(argv.node - 1);
+const providerPort = "22000";
 var web3 = new Web3(new Web3.providers.HttpProvider(providerURL + ":" + providerPort));
 
 const keyJSON = fs.readFileSync('keys/key'+argv.node, 'utf8');
