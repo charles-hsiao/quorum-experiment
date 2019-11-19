@@ -52,12 +52,12 @@ fi
 INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
 
 echo "[*] Configuring node ${INDEX_NODE}"
-mkdir -p qdata/dd${INDEX_NODE}/{keystore,geth}
-cp permissioned-nodes.json qdata/dd${INDEX_NODE}/static-nodes.json
-cp permissioned-nodes.json qdata/dd${INDEX_NODE}/
-cp keys/key${INDEX_NODE} qdata/dd${INDEX_NODE}/keystore
-cp raft/nodekey${INDEX_NODE} qdata/dd${INDEX_NODE}/geth/nodekey
-geth --datadir qdata/dd${INDEX_NODE} init clique-genesis.json
+mkdir -p qdata/dd/{keystore,geth}
+cp permissioned-nodes.json qdata/dd/static-nodes.json
+cp permissioned-nodes.json qdata/dd/
+cp keys/key${INDEX_NODE} qdata/dd/keystore
+cp raft/nodekey${INDEX_NODE} qdata/dd/geth/nodekey
+geth --datadir qdata/dd init clique-genesis.json
 
 #Initialise Tessera configuration
 ./tessera-init.sh

@@ -65,16 +65,16 @@ fi
 INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
 
 echo "[*] Configuring node ${INDEX_NODE}"
-mkdir -p qdata/dd${INDEX_NODE}/{keystore,geth}
+mkdir -p qdata/dd/{keystore,geth}
 if [[ "$istanbulTools" == "true" ]]; then
     iMinus1=$(($INDEX_NODE - 1))
-    cp ${INDEX_NODEMinus1}/nodekey qdata/dd${INDEX_NODE}/geth/nodekey
+    cp ${INDEX_NODEMinus1}/nodekey qdata/dd/geth/nodekey
 else
-    cp raft/nodekey${INDEX_NODE} qdata/dd${INDEX_NODE}/geth/nodekey
+    cp raft/nodekey${INDEX_NODE} qdata/dd/geth/nodekey
 fi
-cp permissioned-nodes.json qdata/dd${INDEX_NODE}/static-nodes.json
-cp keys/key${INDEX_NODE} qdata/dd${INDEX_NODE}/keystore
-geth --datadir qdata/dd${INDEX_NODE} init istanbul-genesis.json
+cp permissioned-nodes.json qdata/dd/static-nodes.json
+cp keys/key${INDEX_NODE} qdata/dd/keystore
+geth --datadir qdata/dd init istanbul-genesis.json
 
 #Initialise Tessera configuration
 ./tessera-init.sh

@@ -10,7 +10,7 @@
 # usage:
 #  ./add-p2p-nodes.sh $PATH/TO/permissioned-nodes.json
 
-PERMISSION_FILE="qdata/dd1/permissioned-nodes.json"
+PERMISSION_FILE="qdata/dd/permissioned-nodes.json"
 QUORUM_DATA_DIR="qdata"
 if [ ! -z $1 ]; then
  PERMISSION_FILE=$1
@@ -34,6 +34,6 @@ echo
 
 echo "$ADD_PEERS" | while read -r addPeer; do 
   for i in {1..7}; do 
-    PRIVATE_CONFIG=$QUORUM_DATA_DIR/c$i/tm.ipc geth --exec $addPeer attach ipc:$QUORUM_DATA_DIR/dd$i/geth.ipc  > /dev/null
+    PRIVATE_CONFIG=$QUORUM_DATA_DIR/c$i/tm.ipc geth --exec $addPeer attach ipc:$QUORUM_DATA_DIR/dd/geth.ipc  > /dev/null
   done
 done
