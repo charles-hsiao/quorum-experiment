@@ -51,17 +51,17 @@ fi
 
 INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
 
-mkdir -p qdata/dd${INDEX_NODE}/{keystore,geth}
+mkdir -p qdata/dd/{keystore,geth}
 if [[ $INDEX_NODE -le 4 ]]; then
     echo "[*] Configuring node $INDEX_NODE (permissioned)"
-    cp permissioned-nodes.json qdata/dd${INDEX_NODE}/
+    cp permissioned-nodes.json qdata/dd/
 else
     echo "[*] Configuring node $INDEX_NODE"
 fi
-cp permissioned-nodes.json qdata/dd${INDEX_NODE}/static-nodes.json
-cp keys/key${INDEX_NODE} qdata/dd${INDEX_NODE}/keystore
-cp raft/nodekey${INDEX_NODE} qdata/dd${INDEX_NODE}/geth/nodekey
-geth --datadir qdata/dd${INDEX_NODE} init genesis.json
+cp permissioned-nodes.json qdata/dd/static-nodes.json
+cp keys/key${INDEX_NODE} qdata/dd/keystore
+cp raft/nodekey${INDEX_NODE} qdata/dd/geth/nodekey
+geth --datadir qdata/dd init genesis.json
 
 #Initialise Tessera configuration
 ./tessera-init.sh
