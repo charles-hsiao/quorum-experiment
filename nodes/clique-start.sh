@@ -91,12 +91,12 @@ rpcPort=22000
 INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
 
 port=$(($basePort + ${INDEX_NODE} - 1))
-PRIVATE_CONFIG=qdata/c${INDEX_NODE}/tm.ipc nohup geth --datadir qdata/dd${INDEX_NODE} ${ARGS} --rpcport ${rpcPort} --port ${port} 2>>qdata/logs/${INDEX_NODE}.log &
+PRIVATE_CONFIG=qdata/c${INDEX_NODE}/tm.ipc nohup geth --datadir qdata/dd ${ARGS} --rpcport ${rpcPort} --port ${port} 2>>qdata/logs/${INDEX_NODE}.log &
 
 set +v
 
 echo
-echo "All nodes configured. See 'qdata/logs' for logs, and run e.g. 'geth attach qdata/dd1/geth.ipc' to attach to the first Geth node."
+echo "All nodes configured. See 'qdata/logs' for logs, and run e.g. 'geth attach qdata/dd/geth.ipc' to attach to the first Geth node."
 echo "To test sending a private transaction from Node 1 to Node 7, run './runscript.sh private-contract.js'"
 
 exit 0
