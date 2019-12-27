@@ -1,6 +1,9 @@
-// From the console test nodes 1 & 7 to see if the events were recorded
-// seth is a cool cli tool that can be used see: https://github.com/dapphub/dapptools
+// From console test node 1 & 7 to see if the events were recorded
+// seth is a cool CLI (but you can use whatever you'd like): https://github.com/dapphub/dapptools
 //   $> seth events 0x1932c48b2bf8102ba33b4a6b545c32236e342f34 | wc -l
+
+// NOTE: replace this with the address of the contract you wish to generate
+//       events for.
 var address="0x1932c48b2bf8102ba33b4a6b545c32236e342f34"
 
 // simple contract
@@ -8,17 +11,5 @@ var abi = [{"constant":true,"inputs":[],"name":"storedData","outputs":[{"name":"
 var contract = eth.contract(abi).at(address)
 
 for ( i = 0; i < 50; i++) {
-  for ( i = 0; i < 100; i++) {
-    contract.set(4,{from:eth.accounts[0], privateFor:["1iTZde/ndBHvzhcl7V68x44Vx7pl8nwx9LqnM/AfJUg="]});
-  }
-  sleep(1000)
+  contract.set(4,{from:eth.accounts[0]});
 }
-
-function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
-  }
-} 
