@@ -91,7 +91,7 @@ rpcPort=22000
 INDEX_NODE=$(cat ~/node_config | grep "NODE_INDEX" | awk -F '=' '{print $2}')
 
 port=$(($basePort + ${INDEX_NODE} - 1))
-PRIVATE_CONFIG=qdata/c${INDEX_NODE}/tm.ipc nohup geth --datadir qdata/dd ${ARGS} --rpcport ${rpcPort} --port ${port} 2>>qdata/logs/${INDEX_NODE}.log &
+PRIVATE_CONFIG=qdata/c${INDEX_NODE}/tm.ipc nohup geth --datadir qdata/dd ${ARGS} --rpcport ${rpcPort} --port ${port} 2>>qdata/logs/geth.log &
 
 set +v
 
