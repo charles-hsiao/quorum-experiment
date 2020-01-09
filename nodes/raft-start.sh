@@ -96,7 +96,7 @@ permissioned=
 if [[ $INDEX_NODE -le 4 ]]; then
     permissioned="--permissioned"
 fi
-PRIVATE_CONFIG=qdata/c${INDEX_NODE}/tm.ipc nohup geth --datadir qdata/dd ${ARGS} ${permissioned} --raftport ${raftPort} --rpcport ${rpcPort} --port ${port} 2>>qdata/logs/${INDEX_NODE}.log &
+PRIVATE_CONFIG=qdata/c${INDEX_NODE}/tm.ipc nohup geth --datadir qdata/dd ${ARGS} ${permissioned} --raftport ${raftPort} --rpcport ${rpcPort} --port ${port} 2>>qdata/logs/geth.log &
 
 set +v
 
